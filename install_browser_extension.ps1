@@ -20,6 +20,7 @@ if (-not (Test-Path -LiteralPath $sourceExtension)) {
 }
 
 New-Item -ItemType Directory -Path $installRoot,$nativeHostPath -Force | Out-Null
+New-Item -ItemType Directory -Path $extensionPath -Force | Out-Null
 Copy-Item -Path (Join-Path $sourceExtension "*") -Destination $extensionPath -Recurse -Force
 
 $chromeManifest = @{
