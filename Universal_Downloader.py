@@ -61,6 +61,7 @@ class UniversalDownloaderApp:
         self._build_ui()
         self.root.after(100, self._drain_events)
         self.root.after(500, self._check_browser_inbox)
+        self.root.after(1500, self._auto_check_updates)
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
 
     def load_settings(self):
@@ -347,8 +348,10 @@ class UniversalDownloaderApp:
                 elif kind == "update":
                     if value is None:
                         self.status_var.set("Você já está na versão mais recente")
-                        messagebox.showinfo("Atualizado", f"Você está usando a versão {APP_VERSION}.", parent=self.root)
+                        if not detail:
+                            messagebox.showinfo("Atualizado", f"Você está usando a versão {APP_VERSION}.", parent=self.root)
                     else:
+                        self.status_var.set(f"Atualização {value['version']} disponível")
                         asset = next((a for a in value.get("assets", []) if a["name"].lower() == "universal_downloader.exe"), None)
                         if asset and getattr(sys, "frozen", False):
                             if messagebox.askyesno("Atualização disponível", f"Versão {value['version']} disponível.\n\nDeseja baixar e instalar agora?", parent=self.root):
@@ -360,8 +363,9 @@ class UniversalDownloaderApp:
                     self.status_var.set("Atualização pronta. Reiniciando…")
                     self.root.after(400, lambda: _restart_with_update(self.root, value))
                 elif kind == "update_error":
-                    self.status_var.set("Falha ao atualizar")
-                    messagebox.showerror("Atualização", value, parent=self.root)
+                    self.status_var.set("Verificação automática indisponível" if detail else "Falha ao atualizar")
+                    if not detail:
+                        messagebox.showerror("Atualização", value, parent=self.root)
                 elif kind == "log":
                     self.status_var.set(f"{detail}: {value[:130]}")
                 elif kind in ("done", "error"):
@@ -390,7 +394,14 @@ class UniversalDownloaderApp:
         self.settings["github_repo"] = repo
         self.save_settings()
         self.status_var.set("Verificando atualizações no GitHub…")
-        threading.Thread(target=self._update_worker, args=(repo,), daemon=True).start()
+        threading.Thread(target=self._update_worker, args=(repo, False), daemon=True).start()
+
+    def _auto_check_updates(self):
+        repo = self.github_var.get().strip()
+        if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repo):
+            return
+        self.status_var.set("Verificando atualizações…")
+        threading.Thread(target=self._update_worker, args=(repo, True), daemon=True).start()
 
     def _repo_dialog(self):
         dialog = tk.Toplevel(self.root)
@@ -418,12 +429,12 @@ class UniversalDownloaderApp:
         self.root.wait_window(dialog)
         return result["repo"]
 
-    def _update_worker(self, repo):
+    def _update_worker(self, repo, silent=False):
         try:
             release = check_release(repo, APP_VERSION)
-            self.events.put(("update", release, "Verificação concluída"))
+            self.events.put(("update", release, silent))
         except Exception as exc:
-            self.events.put(("error", str(exc), "Não foi possível verificar atualizações"))
+            self.events.put(("update_error", str(exc), silent))
 
     def _on_close(self):
         self.save_settings()

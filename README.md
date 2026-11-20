@@ -19,11 +19,11 @@ Para manter o executável compacto, FFmpeg não é embutido por padrão. Downloa
 
 ## Atualizações pelo GitHub
 
-O botão **Verificar atualizações** consulta a última release pública do repositório configurado. Na primeira utilização, informe o repositório no formato `usuario/repositorio`. Salve uma release estável com a tag de versão (por exemplo, `v1.1.0`) e anexe um arquivo chamado exatamente `Universal_Downloader.exe` para habilitar o download e a substituição automáticos no aplicativo compilado.
+Ao abrir, o app consulta em segundo plano a última release pública de `cvinni21/Universal_Downloader`; se encontrar uma versão nova, pede confirmação antes de baixar e instalar. **Verificar atualizações** também permite consultar manualmente. Salve uma release estável com uma tag de versão maior (por exemplo, `v1.2.0`) e anexe um arquivo chamado exatamente `Universal_Downloader.exe` para publicar uma atualização.
 
 O atualizador só substitui o executável depois de o usuário aceitar. Ao executar a versão Python, o app informa a página da release para baixar manualmente. A versão do app é definida em `updater.py`.
 
-O workflow `.github/workflows/release.yml` compila e publica automaticamente o executável quando uma tag `v*` é enviada ao GitHub. Depois de criar um repositório público e enviar o projeto, publique uma tag como `v1.1.0`; informe `usuario/repositorio` no app para receber releases futuras.
+O workflow `.github/workflows/release.yml` compila e publica o app, o host do navegador e a extensão quando uma tag `v*` é enviada ao GitHub. O repositório padrão do atualizador já está configurado como `cvinni21/Universal_Downloader`.
 
 ## Recursos
 
