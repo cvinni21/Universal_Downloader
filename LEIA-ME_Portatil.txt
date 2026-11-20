@@ -1,0 +1,14 @@
+Universal Downloader para Windows
+
+USAR SEM EXTENSAO
+1. Abra Universal_Downloader.exe.
+
+CONFIGURAR INTEGRACAO DO NAVEGADOR (OPCIONAL)
+1. Dê dois cliques em INSTALAR_INTEGRACAO.bat.
+2. Na tela do navegador, ative Modo do desenvolvedor e escolha Carregar sem compactação.
+3. Escolha a pasta browser_extension que o instalador abriu.
+
+O instalador copia o app e o auxiliar para uma pasta fixa do seu usuário. A extensão recebe links pelo menu do botão direito. A interceptação automática começa desligada.
+
+Para MP3 e para unir faixas de áudio/vídeo, instale FFmpeg no Windows.
+Atualizações: https://github.com/cvinni21/Universal_Downloader/releases

@@ -37,14 +37,16 @@ jobs:
           Copy-Item browser_extension/manifest.json,browser_extension/background.js,browser_extension/popup.html,browser_extension/popup.css,browser_extension/popup.js -Destination $stage
           Copy-Item browser_extension/icons -Destination $stage -Recurse
           Compress-Archive -Path (Join-Path $stage "*") -DestinationPath dist/Universal_Downloader_Browser_Extension.zip -Force
-      - name: Package manual browser installer
+      - name: Package portable app and browser setup
         shell: pwsh
-        run: Compress-Archive -Path browser_extension,install_browser_extension.ps1 -DestinationPath dist/Universal_Downloader_Browser_Manual_Setup.zip -Force
-      - name: Package store listing materials
-        shell: pwsh
-        run: Compress-Archive -Path CWS_LISTING.md,PRIVACY.md,store_assets/screenshot-01.png -DestinationPath dist/Universal_Downloader_CWS_Submission.zip -Force
+        run: |
+          $stage = Join-Path $env:RUNNER_TEMP "ud-portable"
+          New-Item -ItemType Directory -Path $stage -Force | Out-Null
+          Copy-Item dist/Universal_Downloader.exe,dist/Universal_Downloader_NativeHost.exe,install_browser_extension.ps1,INSTALAR_INTEGRACAO.bat,LEIA-ME_Portatil.txt -Destination $stage
+          Copy-Item browser_extension -Destination $stage -Recurse
+          Compress-Archive -Path (Join-Path $stage "*") -DestinationPath dist/Universal_Downloader_Portable_Windows.zip -Force
       - name: Publish GitHub release
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create $env:GITHUB_REF_NAME dist/Universal_Downloader.exe dist/Universal_Downloader_NativeHost.exe dist/Universal_Downloader_Browser_Extension.zip dist/Universal_Downloader_Browser_Manual_Setup.zip dist/Universal_Downloader_CWS_Submission.zip --generate-notes
+        run: gh release create $env:GITHUB_REF_NAME dist/Universal_Downloader.exe dist/Universal_Downloader_NativeHost.exe dist/Universal_Downloader_Browser_Extension.zip dist/Universal_Downloader_Portable_Windows.zip --generate-notes

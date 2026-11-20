@@ -36,13 +36,15 @@ O workflow `.github/workflows/release.yml` compila e publica o app, o host do na
 
 ## Integração com o navegador
 
-No Windows, a forma realmente simples é instalar a extensão pela Chrome Web Store: Chrome só permite instalação direta de extensões de fora da loja em ambientes administrados por políticas corporativas. A extensão está preparada para publicação; até a aprovação da loja, a versão de prévia exige o modo de desenvolvedor e **Carregar sem compactação**. A publicação precisa de uma conta de desenvolvedor da loja e aprovação do Google.
+No Windows, a extensão é opcional. Como este projeto não será publicado na Chrome Web Store, o Chrome exige uma etapa manual: ativar o modo de desenvolvedor e usar **Carregar sem compactação**. O instalador abre a tela e a pasta corretas para deixar isso mais simples.
 
 A extensão em `browser_extension/` oferece um menu de contexto para enviar um link ao app e uma opção de interceptação automática de downloads, desativada por padrão. Para a instalação manual de prévia:
 
-1. Extraia o Universal Downloader e mantenha `Universal_Downloader.exe`, `Universal_Downloader_NativeHost.exe`, `install_browser_extension.ps1` e a pasta `browser_extension` juntos.
-2. Execute `install_browser_extension.ps1` no PowerShell do Windows. Ele registra a comunicação nativa no perfil atual e copia a extensão para `%LOCALAPPDATA%/UniversalDownloader/browser_extension`.
-3. No Chrome, Edge ou Brave, abra a página de extensões, ative o modo de desenvolvedor e escolha **Carregar sem compactação** usando a pasta exibida pelo instalador.
-4. Abra o ícone da extensão para ativar a interceptação automática se desejar. Também é possível clicar com o botão direito em um link e escolher **Baixar link com Universal Downloader**.
+1. Baixe `Universal_Downloader_Portable_Windows.zip` na página de releases e extraia a pasta.
+2. Dê dois cliques em `INSTALAR_INTEGRACAO.bat`. Ele instala uma cópia do app e do auxiliar em `%LOCALAPPDATA%/UniversalDownloader`, registra a integração e abre a página de extensões e a pasta da extensão.
+3. No Chrome, Edge ou Brave, ative o modo de desenvolvedor, escolha **Carregar sem compactação** e selecione a pasta que o instalador abriu.
+4. A interceptação automática fica desligada até ser ativada no ícone da extensão. Também é possível clicar com o botão direito em um link e escolher **Baixar link com Universal Downloader**.
+
+Para uso sem extensão, extraia o ZIP e abra `Universal_Downloader.exe`. O app não precisa de Python instalado.
 
 O Firefox usa `about:debugging#/runtime/this-firefox` para carregar o `manifest.json`. Ao receber um link, o app inicia o download automaticamente; links recebidos enquanto outro download está ativo entram na fila. Use apenas downloads que você tem autorização para salvar.
