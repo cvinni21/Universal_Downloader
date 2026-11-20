@@ -1,0 +1,39 @@
+name: Build and publish release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  windows-release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Set app version from tag
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME.TrimStart('v')
+          $source = Get-Content updater.py -Raw
+          $source = [regex]::Replace($source, 'APP_VERSION = "[^"]+"', "APP_VERSION = `"$version`"")
+          Set-Content updater.py $source -NoNewline
+      - name: Build executable
+        run: python -m PyInstaller --noconfirm --clean --onefile --windowed --name Universal_Downloader --collect-all yt_dlp Universal_Downloader.py
+      - name: Build browser native host
+        run: python -m PyInstaller --noconfirm --clean --onefile --console --name Universal_Downloader_NativeHost browser_native_entry.py
+      - name: Package browser extension
+        shell: pwsh
+        run: Compress-Archive -Path browser_extension,install_browser_extension.ps1 -DestinationPath dist/Universal_Downloader_Browser_Extension.zip -Force
+      - name: Publish GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create $env:GITHUB_REF_NAME dist/Universal_Downloader.exe dist/Universal_Downloader_NativeHost.exe dist/Universal_Downloader_Browser_Extension.zip --generate-notes

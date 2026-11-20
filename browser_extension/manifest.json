@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Universal Downloader Bridge",
+  "description": "Envia links e downloads do navegador para o Universal Downloader.",
+  "version": "1.0.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAptsux6kVGxWjNX5VihfRNytfgcqeuIEHcUaaOEZSPJFSQOeLtsJk+XqGgI8uaqAaINruUjmgJ+3exUOFHX5kJJKRO+qkdd2MvtvRcMl7G4brGAZdcsssd3TA+r0YA9MZPmYMMfv4MrZwAB2Beh5LTEJ1PKzlDoonX8sya7JqwL+dwzUWDbkSqRt5sPivaj6UFTdeQF9vIR8Mz2DfGeOZUvDCzgLizAyADoMcGHaIbFqenIi684Uv0PFfxmZFODPLt4A9ysEcugFpp2k+DNJaIVUPzhAYrWSdq4pgm5lsZjXXUsT6OfdXzDq1TmQ3R2vfd7UX1dCO96BnEJMOSF0zrQIDAQAB",
+  "permissions": ["contextMenus", "downloads", "nativeMessaging", "storage"],
+  "background": { "service_worker": "background.js" },
+  "action": { "default_popup": "popup.html", "default_title": "Universal Downloader" },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "universal-downloader@cvinni21",
+      "strict_min_version": "115.0"
+    }
+  }
+}

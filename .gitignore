@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+build/
+dist/
+Universal_Downloader.exe
+Universal_Downloader_NativeHost.exe
+Universal_Downloader_legacy.exe
+Universal_Downloader_Discord.exe
+Universal_Downloader_Discord.zip*
+LEIA-ME_Discord.txt
+RECOMBINAR.bat
+*.spec
