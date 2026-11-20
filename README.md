@@ -36,7 +36,9 @@ O workflow `.github/workflows/release.yml` compila e publica o app, o host do na
 
 ## Integração com o navegador
 
-A extensão em `browser_extension/` oferece um menu de contexto para enviar um link ao app e uma opção de interceptação automática de downloads, desativada por padrão. Para instalar:
+No Windows, a forma realmente simples é instalar a extensão pela Chrome Web Store: Chrome só permite instalação direta de extensões de fora da loja em ambientes administrados por políticas corporativas. A extensão está preparada para publicação; até a aprovação da loja, a versão de prévia exige o modo de desenvolvedor e **Carregar sem compactação**. A publicação precisa de uma conta de desenvolvedor da loja e aprovação do Google.
+
+A extensão em `browser_extension/` oferece um menu de contexto para enviar um link ao app e uma opção de interceptação automática de downloads, desativada por padrão. Para a instalação manual de prévia:
 
 1. Extraia o Universal Downloader e mantenha `Universal_Downloader.exe`, `Universal_Downloader_NativeHost.exe`, `install_browser_extension.ps1` e a pasta `browser_extension` juntos.
 2. Execute `install_browser_extension.ps1` no PowerShell do Windows. Ele registra a comunicação nativa no perfil atual e copia a extensão para `%LOCALAPPDATA%/UniversalDownloader/browser_extension`.
