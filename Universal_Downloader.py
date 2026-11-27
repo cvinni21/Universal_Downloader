@@ -161,7 +161,7 @@ class UniversalDownloaderApp:
         connection_card.pack(fill="x", pady=(0, 14))
         self._label(connection_card, "POLÍTICA DE CONEXÃO")
         ttk.Combobox(connection_card, textvariable=self.connection_var, state="readonly", values=[
-            "Padrão · 4 segmentos", "Cuidadoso · pausas entre requisições",
+            "Turbo · 8 conexões", "Padrão · 4 segmentos", "Cuidadoso · pausas entre requisições",
         ]).pack(fill="x", pady=(8, 0))
 
         extras = self._card(body)
@@ -246,7 +246,8 @@ class UniversalDownloaderApp:
             "outtmpl": template,
             "noplaylist": not self.playlist_var.get(),
             "ignoreerrors": False,
-            "concurrent_fragment_downloads": 4,
+            "concurrent_fragment_downloads": self._connection_profile()["fragments"],
+            "http_chunk_size": self._connection_profile()["http_chunk_size"],
             "retries": 10,
             "fragment_retries": 10,
             "progress_hooks": [self._progress_hook],
@@ -286,6 +287,20 @@ class UniversalDownloaderApp:
         if self.metadata_var.get():
             opts["postprocessors"] = opts.get("postprocessors", []) + [{"key": "FFmpegMetadata"}]
         return opts
+
+    def _connection_profile(self):
+        """Choose conservative HTTP range chunks and HLS/DASH fragment concurrency.
+
+        yt-dlp can parallelize manifest fragments directly. For OK.ru's usual
+        single progressive MP4 URL, range chunks are used when the server
+        supports byte ranges; unsupported servers can still fall back safely.
+        """
+        mode = self.connection_var.get()
+        if mode.startswith("Cuidadoso"):
+            return {"fragments": 1, "http_chunk_size": 0}
+        if mode.startswith("Turbo"):
+            return {"fragments": 8, "http_chunk_size": 8 * 1024 * 1024}
+        return {"fragments": 4, "http_chunk_size": 4 * 1024 * 1024}
 
     def _progress_hook(self, data):
         if data["status"] == "downloading":

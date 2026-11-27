@@ -32,7 +32,7 @@ O workflow `.github/workflows/release.yml` compila e publica o app, o host do na
 - Download de legendas e inclusão de metadados.
 - Nome e pasta de destino personalizáveis.
 - Preferências guardadas em `%APPDATA%/UniversalDownloader/settings.json`.
-- Política de conexão padrão ou cuidadosa, com pausas e tentativas em espera progressiva para respeitar limites e reduzir erros temporários.
+- Perfis de conexão Turbo, Padrão e Cuidadoso. Turbo usa blocos HTTP por intervalo quando o servidor permite e até oito fragmentos HLS/DASH simultâneos; o ganho depende do servidor e da conexão.
 
 ## Integração com o navegador
 
